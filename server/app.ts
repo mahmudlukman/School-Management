@@ -27,6 +27,11 @@ import parentRouter from "./routes/parent.route";
 import subjectRouter from "./routes/subject.route";
 import teacherRouter from "./routes/teacher.route";
 import timetableRouter from "./routes/timetable.route";
+import transportRouter from "./routes/transport.route";
+import hostelRouter from "./routes/hostel.route";
+import expenseRouter from "./routes/expense.route";
+import complaintRouter from "./routes/complaint.route";
+import certificateRouter from "./routes/certificate.route";
 
 export const app = express();
 // Load environment variables from .env file
@@ -93,7 +98,12 @@ app.use(
   parentRouter,
   subjectRouter,
   teacherRouter,
-  timetableRouter
+  timetableRouter,
+  transportRouter,
+  hostelRouter,
+  expenseRouter,
+  complaintRouter,
+  certificateRouter
 );
 
 // testing API
