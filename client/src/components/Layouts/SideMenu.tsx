@@ -1,16 +1,61 @@
 import { useEffect, useState } from "react";
-import { SIDE_MENU_DATA, SIDE_MENU_USER_DATA } from "../../utils/data";
 import { useNavigate } from "react-router-dom";
 import type { IconType } from "react-icons";
 import { useSelector } from "react-redux";
 import type { RootState } from "../../@types";
 import { useLogoutMutation } from "../../redux/features/auth/authApi";
+import { MENU_DATA } from "../../utils/data";
 import { getInitials } from "../../utils/helper";
+
+// Group menu items by sections
+const MENU_SECTIONS = [
+  {
+    title: "MAIN",
+    items: [
+      "Dashboard",
+      "Students",
+      "Teachers",
+      "Parents",
+      "Classes",
+      "Subjects",
+    ],
+  },
+  {
+    title: "ACADEMICS",
+    items: ["Timetable", "Attendance", "Exams", "Results", "Homework"],
+  },
+  {
+    title: "FINANCE",
+    items: ["Fees", "Expenses"],
+  },
+  {
+    title: "FACILITIES",
+    items: ["Library", "Transport", "Hostel"],
+  },
+  {
+    title: "COMMUNICATION",
+    items: ["Events", "Announcements", "Messages", "Complaints"],
+  },
+  {
+    title: "OTHER",
+    items: [
+      "Certificates",
+      "Leave",
+      "Notifications",
+      "My Profile",
+      "Settings",
+      "Logout",
+    ],
+  },
+];
 
 const SideMenu = ({ activeMenu }: { activeMenu: string }) => {
   const { user } = useSelector((state: RootState) => state.auth);
-  const [sideMenuData, setSideMenuData] = useState<
-    { id: string; label: string; icon: IconType; path: string }[]
+  const [groupedMenuData, setGroupedMenuData] = useState<
+    {
+      title: string;
+      items: { id: string; label: string; icon: IconType; path: string }[];
+    }[]
   >([]);
   const [logout, { isLoading: isLoggingOut }] = useLogoutMutation();
   const navigate = useNavigate();
@@ -34,52 +79,65 @@ const SideMenu = ({ activeMenu }: { activeMenu: string }) => {
 
   useEffect(() => {
     if (user) {
-      setSideMenuData(
-        user.role === "admin" || user.role === "editor"
-          ? SIDE_MENU_DATA
-          : SIDE_MENU_USER_DATA
+      // Filter menu items based on user role
+      const filteredMenu = MENU_DATA.filter((item) =>
+        item.visible.includes(user.role)
       );
+
+      // Group filtered menu by sections
+      const grouped = MENU_SECTIONS.map((section) => ({
+        title: section.title,
+        items: filteredMenu.filter((item) =>
+          section.items.includes(item.label)
+        ),
+      })).filter((section) => section.items.length > 0);
+
+      setGroupedMenuData(grouped);
     }
   }, [user]);
 
   return (
-    <div className="w-64 h-[calc(100vh-61px)] bg-white border-r border-gray-200/50 sticky top-[61px] z-20">
+    <div className="w-64 h-[calc(100vh-61px)] bg-white border-r border-gray-200/50 sticky top-[61px] z-20 overflow-y-auto">
       <div className="flex flex-col items-center justify-center mb-7 pt-5">
         <div className="relative">
           <div className="w-12 h-12 flex items-center justify-center rounded-full bg-primary text-white font-semibold cursor-pointer">
-            {getInitials(user?.name)}
+            {getInitials(user?.name || user?.email)}
           </div>
         </div>
-        {(user?.role === "admin" || user?.role === "editor") && (
-          <div className="text-[10px] font-medium text-white bg-primary px-3 py-0.5 rounded mt-1 capitalize">
-            {user.role}
-          </div>
-        )}
+        <div className="text-[10px] font-medium text-white bg-primary px-3 py-0.5 rounded mt-1 capitalize">
+          {user?.role?.replace("_", " ")}
+        </div>
         <h5 className="text-gray-950 font-medium leading-6 mt-3">
-          {user?.accountType === "company" ? user?.companyName : user?.name}
+          {user?.name || user?.email}
         </h5>
-
         <p className="text-[12px] text-gray-500">{user?.email || ""}</p>
       </div>
 
-      {sideMenuData.map((item, index) => (
-        <button
-          key={`menu_${index}`}
-          className={`w-full flex items-center gap-4 text-[15px] ${
-            activeMenu === item.label
-              ? "text-primary bg-linear-to-r from-blue-50/40 to-blue-100/50 border-r-3"
-              : ""
-          } py-3 px-6 mb-3 cursor-pointer relative`}
-          onClick={() => handleClick(item.path)}
-          disabled={item.path === "logout" && isLoggingOut}
-        >
-          <item.icon className="text-xl" />
-          <span>
-            {item.path === "logout" && isLoggingOut
-              ? "Logging out..."
-              : item.label}
-          </span>
-        </button>
+      {groupedMenuData.map((section, sectionIndex) => (
+        <div key={`section_${sectionIndex}`} className="mb-4">
+          <h3 className="text-[10px] font-semibold text-gray-400 uppercase px-6 mb-2">
+            {section.title}
+          </h3>
+          {section.items.map((item, index) => (
+            <button
+              key={`menu_${index}`}
+              className={`w-full flex items-center gap-4 text-[15px] ${
+                activeMenu === item.label
+                  ? "text-primary bg-linear-to-r from-blue-50/40 to-blue-100/50 border-r-3"
+                  : ""
+              } py-3 px-6 mb-3 cursor-pointer relative`}
+              onClick={() => handleClick(item.path)}
+              disabled={item.path === "logout" && isLoggingOut}
+            >
+              <item.icon className="text-xl" />
+              <span>
+                {item.path === "logout" && isLoggingOut
+                  ? "Logging out..."
+                  : item.label}
+              </span>
+            </button>
+          ))}
+        </div>
       ))}
     </div>
   );

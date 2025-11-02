@@ -7,12 +7,13 @@ export interface RootState {
 export interface User {
   _id: string;
   email: string;
-  role: string;
-  accountType: "individual" | "company";
   name?: string;
-  companyName?: string;
-  phoneNumber?: string;
-  isActive?: boolean;
+  role: 'super_admin' | 'admin' | 'principal' | 'teacher' | 'student' | 'parent' | 'accountant' | 'librarian' | 'receptionist';
+  isActive: boolean;
+  profileId?: string;
+  lastLogin?: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface ServerError {

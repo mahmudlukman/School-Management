@@ -22,9 +22,9 @@ const SignUp = () => {
   useEffect(() => {
     if (user && !isRegistering) {
       if (user.role === "admin") {
-        navigate("/admin/dashboard");
+        navigate("/dashboard");
       } else {
-        navigate("/user/dashboard");
+        navigate("/dashboard");
       }
     }
   }, [user, navigate, isRegistering]);
