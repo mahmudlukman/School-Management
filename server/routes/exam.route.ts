@@ -20,13 +20,13 @@ examRouter.post(
 );
 examRouter.get("/exams", isAuthenticated, getAllExams);
 examRouter.post(
-  "/exams-schedule",
+  "/create-exams-schedule",
   isAuthenticated,
   authorizeRoles(UserRole.ADMIN, UserRole.PRINCIPAL),
   createExamSchedule
 );
 
-examRouter.get("/exams-schedule/:id", isAuthenticated, getExamSchedule);
+examRouter.get("/exams-schedule/:examId", isAuthenticated, getExamSchedule);
 examRouter.post(
   "/add-result",
   isAuthenticated,

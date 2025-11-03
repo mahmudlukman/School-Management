@@ -9,15 +9,15 @@ import {
 const notificationRouter = express.Router();
 
 notificationRouter.get(
-  "/user-notifications",
+  "/notifications",
   isAuthenticated,
   getUserNotifications
 );
 notificationRouter.put(
-  "/notification/:notificationId",
+  "/mark-as-read/:notificationId",
   isAuthenticated,
   markAsRead
 );
-notificationRouter.put("/notifications", isAuthenticated, markAllAsRead);
+notificationRouter.put("/mark-all-as-read", isAuthenticated, markAllAsRead);
 
 export default notificationRouter;

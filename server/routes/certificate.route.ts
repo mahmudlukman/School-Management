@@ -24,7 +24,7 @@ certificateRouter.get("/certificates", isAuthenticated, getAllCertificates);
 certificateRouter.get("/certificate/:id", isAuthenticated, getCertificate);
 
 certificateRouter.get(
-  "/certificates-by-number/:certificateNumber",
+  "/certificate-by-number/:certificateNumber",
   isAuthenticated,
   getCertificateByNumber
 );
@@ -37,7 +37,7 @@ certificateRouter.put(
 );
 
 certificateRouter.get(
-  "/student-certificates/:studentId",
+  "/student-certificate/:studentId",
   isAuthenticated,
   getStudentCertificates
 );

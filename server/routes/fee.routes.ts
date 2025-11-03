@@ -12,21 +12,21 @@ import {
 const feeRouter = express.Router();
 
 feeRouter.post(
-  "/create-fees-structure",
+  "/create-fee-structure",
   isAuthenticated,
   authorizeRoles(UserRole.ADMIN, UserRole.PRINCIPAL, UserRole.ACCOUNTANT),
   createFeeStructure
 );
-feeRouter.get("/fees-structures", isAuthenticated, getFeeStructures);
+feeRouter.get("/fee-structure", isAuthenticated, getFeeStructures);
 feeRouter.post(
-  "/record-fees-payment",
+  "/record-fee-payment",
   isAuthenticated,
   authorizeRoles(UserRole.ADMIN, UserRole.ACCOUNTANT),
   recordPayment
 );
 
 feeRouter.get(
-  "/fees-payment",
+  "/fee-payment",
   isAuthenticated,
   authorizeRoles(
     UserRole.ACCOUNTANT,
@@ -38,7 +38,7 @@ feeRouter.get(
 );
 
 feeRouter.get(
-  "/fees-summary/:studentId",
+  "/fee-summary/:studentId",
   isAuthenticated,
   authorizeRoles(
     UserRole.ACCOUNTANT,

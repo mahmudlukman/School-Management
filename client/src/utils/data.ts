@@ -248,3 +248,46 @@ export const MENU_DATA = [
     ],
   },
 ];
+
+// Group menu items by sections
+export const MENU_SECTIONS = [
+  {
+    title: "MAIN",
+    items: [
+      "Dashboard",
+      "Students",
+      "Teachers",
+      "Parents",
+      "Classes",
+      "Subjects",
+    ],
+  },
+  {
+    title: "ACADEMICS",
+    items: ["Timetable", "Attendance", "Exams", "Results", "Homework"],
+  },
+  {
+    title: "FINANCE",
+    items: ["Fees", "Expenses"],
+  },
+  {
+    title: "FACILITIES",
+    items: ["Library", "Transport", "Hostel"],
+  },
+  {
+    title: "COMMUNICATION",
+    items: ["Events", "Announcements", "Messages", "Complaints"],
+  },
+  {
+    title: "OTHER",
+    items: [
+      "Certificates",
+      "Leave",
+      "Notifications",
+      "My Profile",
+      "Settings",
+      "Logout",
+    ],
+  },
+];
+

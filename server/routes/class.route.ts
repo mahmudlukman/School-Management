@@ -19,7 +19,7 @@ classRouter.post(
 );
 classRouter.get("/classes", isAuthenticated, getAllClasses);
 classRouter.post(
-  "/create-sections",
+  "/create-section",
   isAuthenticated,
   authorizeRoles(UserRole.ADMIN, UserRole.PRINCIPAL),
   createSection

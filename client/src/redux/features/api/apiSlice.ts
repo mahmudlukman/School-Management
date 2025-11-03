@@ -99,6 +99,7 @@ export const apiSlice = createApi({
     "School",
     "Section",
     "Student",
+    "Subject",
     "Teacher",
     "Timetable",
     "Transport",

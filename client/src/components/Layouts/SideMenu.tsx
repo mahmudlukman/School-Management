@@ -4,50 +4,9 @@ import type { IconType } from "react-icons";
 import { useSelector } from "react-redux";
 import type { RootState } from "../../@types";
 import { useLogoutMutation } from "../../redux/features/auth/authApi";
-import { MENU_DATA } from "../../utils/data";
+import { MENU_DATA, MENU_SECTIONS } from "../../utils/data";
 import { getInitials } from "../../utils/helper";
 
-// Group menu items by sections
-const MENU_SECTIONS = [
-  {
-    title: "MAIN",
-    items: [
-      "Dashboard",
-      "Students",
-      "Teachers",
-      "Parents",
-      "Classes",
-      "Subjects",
-    ],
-  },
-  {
-    title: "ACADEMICS",
-    items: ["Timetable", "Attendance", "Exams", "Results", "Homework"],
-  },
-  {
-    title: "FINANCE",
-    items: ["Fees", "Expenses"],
-  },
-  {
-    title: "FACILITIES",
-    items: ["Library", "Transport", "Hostel"],
-  },
-  {
-    title: "COMMUNICATION",
-    items: ["Events", "Announcements", "Messages", "Complaints"],
-  },
-  {
-    title: "OTHER",
-    items: [
-      "Certificates",
-      "Leave",
-      "Notifications",
-      "My Profile",
-      "Settings",
-      "Logout",
-    ],
-  },
-];
 
 const SideMenu = ({ activeMenu }: { activeMenu: string }) => {
   const { user } = useSelector((state: RootState) => state.auth);

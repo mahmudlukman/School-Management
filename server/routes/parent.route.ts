@@ -19,7 +19,7 @@ const parentRouter = express.Router();
 
 // Create Parent
 parentRouter.post(
-  "/parents",
+  "/create-parent",
   isAuthenticated,
   authorizeRoles(UserRole.ADMIN, UserRole.PRINCIPAL),
   createParent
