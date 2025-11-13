@@ -47,7 +47,6 @@ export interface Announcement {
   createdAt: Date;
 }
 
-
 export interface Attendance {
   _id: string;
   date: Date;
@@ -82,6 +81,63 @@ export interface Student {
   previousSchool?: string;
   status: "active" | "inactive" | "graduated" | "transferred";
 }
+
+interface Teacher {
+  _id: string;
+  employeeId: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  qualification?: string;
+  experience?: number;
+  joiningDate?: string;
+  address?: string;
+  subjects?: { name: string }[];
+  status?: string;
+}
+
+export interface Parent {
+  _id: string;
+  firstName: string;
+  lastName: string;
+  relationship: string;
+  phone: string;
+  email: string;
+  address: string;
+  studentIds: {
+    _id: string;
+    firstName: string;
+    lastName: string;
+  }[];
+  userId: {
+    _id: string;
+    email: string;
+  };
+}
+
+export interface Classes {
+  _id: string;
+  name: string;
+  level: number;
+  capacity: number;
+  academicYearId?: AcademicYear;
+  classTeacherId?: Teacher;
+  sections: string;
+  createdAt: string;
+}
+
+export type Subject = {
+  _id: string;
+  name: string;
+  code: string;
+  description: string;
+  totalMarks: number;
+  createdAt: string;
+  updatedAt: string;
+  classId: Classes;
+  teacherId?: Teacher;
+};
 
 export interface FeePayment {
   _id: string;
@@ -120,4 +176,3 @@ export interface Event {
   eventType: string;
   createdBy: string;
 }
-
