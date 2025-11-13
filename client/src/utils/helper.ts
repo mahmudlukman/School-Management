@@ -1,5 +1,7 @@
 import { MENU_DATA } from "../utils/data";
 
+export const ITEM_PER_PAGE = 10
+
 export const getMenuForRole = (userRole: string) => {
   return MENU_DATA.filter((item) => item.visible.includes(userRole));
 };

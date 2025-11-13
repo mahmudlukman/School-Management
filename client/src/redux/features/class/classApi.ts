@@ -1,3 +1,4 @@
+// redux/features/class/classApi.ts
 import { apiSlice } from "../api/apiSlice";
 
 export const classApi = apiSlice.injectEndpoints({
@@ -21,31 +22,23 @@ export const classApi = apiSlice.injectEndpoints({
       invalidatesTags: [{ type: "Class", id: "LIST" }],
     }),
 
-    getSectionsByClass: builder.query({
-      query: (classId) => ({
-        url: `class-section/${classId}`,
-        method: "GET",
-        credentials: "include" as const,
-      }),
-      providesTags: [{ type: "Section", id: "LIST" }],
-    }),
-
-    createSection: builder.mutation({
+    updateClass: builder.mutation({
       query: (data) => ({
-        url: "create-section",
-        method: "POST",
+        url: `update-class/${data.id}`,
+        method: "PUT",
         body: data,
         credentials: "include" as const,
       }),
-      invalidatesTags: [{ type: "Section", id: "LIST" }],
+      invalidatesTags: [{ type: "Class", id: "LIST" }],
     }),
-    assignClassTeacher: builder.query({
-      query: (classId) => ({
-        url: `assign-class-teacher/${classId}`,
-        method: "PUT",
+
+    deleteClass: builder.mutation({
+      query: (id) => ({
+        url: `delete-class/${id}`,
+        method: "DELETE",
         credentials: "include" as const,
       }),
-      providesTags: [{ type: "Section", id: "LIST" }],
+      invalidatesTags: [{ type: "Class", id: "LIST" }],
     }),
   }),
 });
@@ -53,7 +46,6 @@ export const classApi = apiSlice.injectEndpoints({
 export const {
   useGetAllClassesQuery,
   useCreateClassMutation,
-  useGetSectionsByClassQuery,
-  useCreateSectionMutation,
-  useAssignClassTeacherQuery
+  useUpdateClassMutation,
+  useDeleteClassMutation,
 } = classApi;

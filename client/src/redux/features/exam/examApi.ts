@@ -70,6 +70,14 @@ export const examApi = apiSlice.injectEndpoints({
       },
       providesTags: [{ type: "Result", id: "LIST" }],
     }),
+    deleteExam: builder.mutation({
+      query: (id) => ({
+        url: `delete-exam/${id}`,
+        method: "DELETE",
+        credentials: "include" as const,
+      }),
+      invalidatesTags: [{ type: "Examination", id: "LIST" }],
+    }),
   }),
 });
 
@@ -80,4 +88,5 @@ export const {
   useGetExamScheduleQuery,
   useAddResultMutation,
   useGetResultsQuery,
+  useDeleteExamMutation,
 } = examApi;

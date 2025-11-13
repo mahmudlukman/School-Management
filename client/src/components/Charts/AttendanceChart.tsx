@@ -9,36 +9,55 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-
-const data = [
-  {
-    name: "Mon",
-    present: 60,
-    absent: 40,
-  },
-  {
-    name: "Tue",
-    present: 70,
-    absent: 60,
-  },
-  {
-    name: "Wed",
-    present: 90,
-    absent: 75,
-  },
-  {
-    name: "Thu",
-    present: 90,
-    absent: 75,
-  },
-  {
-    name: "Fri",
-    present: 65,
-    absent: 55,
-  },
-];
+import { useMemo } from "react";
+import { useGetAttendanceQuery } from "../../redux/features/attendance/attendanceApi";
+import type { Attendance } from "../../@types";
 
 const AttendanceChart = () => {
+  // Get attendance for last 7 days
+  const endDate = new Date();
+  const startDate = new Date();
+  startDate.setDate(startDate.getDate() - 6);
+
+  const { data: attendanceData } = useGetAttendanceQuery({
+    startDate: startDate.toISOString().split("T")[0],
+    endDate: endDate.toISOString().split("T")[0],
+  });
+
+  const chartData = useMemo(() => {
+    if (!attendanceData?.attendance) return [];
+
+    const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    const dataByDay: Record<string, { present: number; absent: number }> = {};
+
+    // Initialize last 7 days
+    for (let i = 0; i < 7; i++) {
+      const date = new Date();
+      date.setDate(date.getDate() - (6 - i));
+      const dayName = days[date.getDay()];
+      dataByDay[dayName] = { present: 0, absent: 0 };
+    }
+
+    // Aggregate attendance data
+    attendanceData.attendance.forEach((record: Attendance) => {
+      const date = new Date(record.date);
+      const dayName = days[date.getDay()];
+      
+      if (dataByDay[dayName]) {
+        if (record.status === "present") {
+          dataByDay[dayName].present++;
+        } else if (record.status === "absent") {
+          dataByDay[dayName].absent++;
+        }
+      }
+    });
+
+    return Object.entries(dataByDay).map(([name, counts]) => ({
+      name,
+      ...counts,
+    }));
+  }, [attendanceData]);
+
   return (
     <div className="bg-white rounded-lg p-4 h-full card">
       <div className="flex justify-between items-center">
@@ -46,7 +65,7 @@ const AttendanceChart = () => {
         <img src={MoreDark} alt="" width={20} height={20} />
       </div>
       <ResponsiveContainer width="100%" height="90%">
-        <BarChart width={500} height={300} data={data} barSize={20}>
+        <BarChart width={500} height={300} data={chartData} barSize={20}>
           <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#ddd" />
           <XAxis
             dataKey="name"

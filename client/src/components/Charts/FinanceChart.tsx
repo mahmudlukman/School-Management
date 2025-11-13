@@ -9,71 +9,72 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-
-const data = [
-  {
-    name: "Jan",
-    income: 4000,
-    expense: 2400,
-  },
-  {
-    name: "Feb",
-    income: 3000,
-    expense: 1398,
-  },
-  {
-    name: "Mar",
-    income: 2000,
-    expense: 9800,
-  },
-  {
-    name: "Apr",
-    income: 2780,
-    expense: 3908,
-  },
-  {
-    name: "May",
-    income: 1890,
-    expense: 4800,
-  },
-  {
-    name: "Jun",
-    income: 2390,
-    expense: 3800,
-  },
-  {
-    name: "Jul",
-    income: 3490,
-    expense: 4300,
-  },
-  {
-    name: "Aug",
-    income: 3490,
-    expense: 4300,
-  },
-  {
-    name: "Sep",
-    income: 3490,
-    expense: 4300,
-  },
-  {
-    name: "Oct",
-    income: 3490,
-    expense: 4300,
-  },
-  {
-    name: "Nov",
-    income: 3490,
-    expense: 4300,
-  },
-  {
-    name: "Dec",
-    income: 3490,
-    expense: 4300,
-  },
-];
+import { useMemo } from "react";
+import { useGetFeePaymentsQuery } from "../../redux/features/fee/feeApi";
+import { useGetAllExpensesQuery } from "../../redux/features/expense/expenseApi";
+import type { Expense, FeePayment } from "../../@types";
 
 const FinanceChart = () => {
+  const currentYear = new Date().getFullYear();
+  const startDate = `${currentYear}-01-01`;
+  const endDate = `${currentYear}-12-31`;
+
+  const { data: paymentsData } = useGetFeePaymentsQuery({
+    startDate,
+    endDate,
+    status: "paid",
+  });
+
+  const { data: expensesData } = useGetAllExpensesQuery({
+    startDate,
+    endDate,
+    page: 1,
+    limit: 1000,
+  });
+
+  const chartData = useMemo(() => {
+    const months = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+
+    const dataByMonth: Record<string, { income: number; expense: number }> = {};
+
+    // Initialize all months
+    months.forEach((month) => {
+      dataByMonth[month] = { income: 0, expense: 0 };
+    });
+
+    // Aggregate income from fee payments
+    paymentsData?.payments?.forEach((payment: FeePayment) => {
+      const date = new Date(payment.paymentDate);
+      const month = months[date.getMonth()];
+      dataByMonth[month].income += payment.amountPaid;
+    });
+
+    // Aggregate expenses
+    expensesData?.expenses?.forEach((expense: Expense) => {
+      const date = new Date(expense.date);
+      const month = months[date.getMonth()];
+      dataByMonth[month].expense += expense.amount;
+    });
+
+    return months.map((month) => ({
+      name: month,
+      ...dataByMonth[month],
+    }));
+  }, [paymentsData, expensesData]);
+
   return (
     <div className="bg-white rounded-xl w-full h-full p-4 card">
       <div className="flex justify-between items-center">
@@ -84,7 +85,7 @@ const FinanceChart = () => {
         <LineChart
           width={500}
           height={300}
-          data={data}
+          data={chartData}
           margin={{
             top: 5,
             right: 30,

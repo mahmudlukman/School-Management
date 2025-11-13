@@ -27,6 +27,7 @@ const Navbar = ({ activeMenu }: { activeMenu: string }) => {
           <SideMenu activeMenu={activeMenu} />
         </div>
       )}
+      
     </div>
   );
 };
